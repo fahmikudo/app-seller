@@ -28,7 +28,7 @@ public class BarangServiceImpl implements BarangService {
     private BarangRepo barangRepo;
 
     @Autowired
-    private SellerRepo sellerRepo;
+    private SellerService sellerService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -37,10 +37,9 @@ public class BarangServiceImpl implements BarangService {
     public Barang save(Barang barang) {
         LOGGER.debug("Save {}", barang);
         Optional<Barang> b = barangRepo.findById(barang.getId());
-        Optional<Seller> s = sellerRepo.findById(barang.getSellers().getId());
+        Optional<Seller> s = sellerService.findById(barang.getSellers().getId());
 
         boolean valid = false;
-
         if (b.isPresent() && s.isPresent()){
             valid = true;
         }

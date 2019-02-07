@@ -1,6 +1,5 @@
 package id.web.fahmikudo.test.appseller.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -26,7 +25,6 @@ public class Barang extends BaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "seller_id", nullable = false)
-    @JsonIgnore
     private Seller sellers;
 
     public Barang() {

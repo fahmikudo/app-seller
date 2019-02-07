@@ -30,7 +30,7 @@ public class Seller extends BaseEntity {
     @Column(name = "seller_ktp")
     private String sellerKTP;
 
-    @OneToMany(mappedBy = "sellers", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sellers", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Barang> barangs;
 
