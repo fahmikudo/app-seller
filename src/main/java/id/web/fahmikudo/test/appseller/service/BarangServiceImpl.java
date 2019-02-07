@@ -54,7 +54,8 @@ public class BarangServiceImpl implements BarangService {
 
     @Override
     public Optional<Barang> findById(String id) {
-        return Optional.empty();
+        LOGGER.debug("Search barang by id: " + id);
+        return barangRepo.findById(id);
     }
 
     @Override
@@ -65,7 +66,11 @@ public class BarangServiceImpl implements BarangService {
 
     @Override
     public Barang update(Barang barang) {
-        return null;
+        LOGGER.debug("barang with id: " + barang.getId() + " updated!");
+        if (!entityManager.contains(barang)){
+            barang = entityManager.merge(barang);
+        }
+        return barang;
     }
 
     @Override

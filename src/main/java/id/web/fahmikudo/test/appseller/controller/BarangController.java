@@ -1,6 +1,7 @@
 package id.web.fahmikudo.test.appseller.controller;
 
 
+import id.web.fahmikudo.test.appseller.Exception.CustomError;
 import id.web.fahmikudo.test.appseller.model.Barang;
 import id.web.fahmikudo.test.appseller.service.BarangService;
 import org.slf4j.Logger;
@@ -10,10 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -60,6 +58,62 @@ public class BarangController {
         }
         return new ResponseEntity<>(barangs, HttpStatus.OK);
 
+    }
+
+    //update barang
+    @RequestMapping(
+            value = "barangs/{id}",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Barang> updateBarang(@PathVariable String id, @RequestBody Barang barang){
+        LOGGER.debug(">>> Updating barang with id: " + id);
+        Barang currentBarang = barangService.findById(id).get();
+        if (currentBarang == null){
+            LOGGER.debug("<<< Barangs with id: " + id + ", not found!");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        currentBarang.setBarangName(barang.getBarangName());
+        currentBarang.setBarangCategory(barang.getBarangCategory());
+        currentBarang.setBarangStock(barang.getBarangStock());
+        currentBarang.setBarangPrice(barang.getBarangPrice());
+        currentBarang.setSellers(barang.getSellers());
+
+        barangService.update(currentBarang);
+        return new ResponseEntity<>(currentBarang, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(
+            value = "barangs/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Barang> deleteBarang(@PathVariable String id){
+        LOGGER.debug("Fetching & Deleting barang with id: " + id + " is successfully removed from database!");
+        Barang barang = barangService.findById(id).get();
+        if (barang == null){
+            LOGGER.debug("Unable to delete. Barang with id: " + id + ", not found!");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        barangService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    @RequestMapping(
+            value = "barangs",
+            method = RequestMethod.DELETE)
+    public ResponseEntity<Barang> deleteAllBarangs(){
+        barangService.deleteAll();
+        LOGGER.debug("Removed all barangs from database!");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleAlreadyExistsException(CustomError exception) {
+        return exception.getMessage();
     }
 
 

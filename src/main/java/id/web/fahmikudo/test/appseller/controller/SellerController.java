@@ -121,7 +121,7 @@ public class SellerController {
 
     //delete all seller
     @RequestMapping(
-            value = "authors",
+            value = "sellers",
             method = RequestMethod.DELETE)
     public ResponseEntity<Seller> deleteAllSellers() {
         sellerService.deleteAll();
