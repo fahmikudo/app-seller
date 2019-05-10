@@ -75,11 +75,14 @@ public class BarangServiceImpl implements BarangService {
 
     @Override
     public void delete(String id) {
-
+        LOGGER.debug("barang with id: " + id + "deleted");
+        Barang b = barangRepo.findById(id).get();
+        barangRepo.delete(b);
     }
 
     @Override
     public void deleteAll() {
-
+        LOGGER.debug("The list all barang deleted!");
+        barangRepo.deleteAll();
     }
 }
